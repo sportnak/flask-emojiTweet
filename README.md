@@ -22,3 +22,20 @@ if you want to run the application without debugging simply run '''runp.py''' in
 | About_Me	| String(140)	| none			 |
 | Last_Seen	| DateTime		| none			 |
 | followed	| Relationship	| joins-follows	 |
+
+### Tweets
+
+| Name | Type | Data Comments |
+| :--------- | :--------- | :--------- |
+| Id 		 | Int 		| Primary Key		 |
+| Emoji  	 | Int 		| Foreign Key(Emojis)|
+| Timestamp	 | DateTime	| none				 |
+| User_Id	 | Int 		| Foreign Key(User)  |
+
+### Emojis
+
+| Name | Type | Data Comments |
+| :--------- | :--------- | :--------- |
+| Id 		| Int 		 | Primary Key	|
+| Location	| String(100)| none			|
+| Counter	| Int 		 | none 		|
