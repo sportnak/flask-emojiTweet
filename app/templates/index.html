@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+{% with WIDTH = 3, HEIGHT = 2 %}
+	<div>
+		<div class="container">
+			<div class = "row" style="min-height: 100px; text-align:center; vertical-align:middle">
+				<div class = "span4 offset1">
+					<br><br>
+					{% if user.nickname %}
+						<h1>Hey {{ user.nickname }}! How are you feeling?</h1>
+					{% else %}
+						<h1>How are you feeling?</h1>
+					{% endif %}
+				</div>
+				<div id ="crazy stuff" class = "span6"></div>
+				<script type="text/jsx" src="/static/js/emojiselect.js"></script>
+			</div>
+		</div>
+		<hr>
+	</div>
+	<div id='example'></div>
+	<script type="text/jsx" src="/static/js/helloworld.js"></script>
+{% endwith %}
+{% endblock %}

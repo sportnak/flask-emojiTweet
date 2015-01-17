@@ -1,0 +1,23 @@
+{%extends "base.html" %}
+
+{% block content %}
+	<h1>Sign In</h1>
+	<form class="form-horizontal" action='' method='post' name='login'>
+		{{ form.hidden_tag() }}
+		<p>
+			<p style='display:inline; font-weight:bold'>Please enter your login information:</p><br><br>
+			{{ form.email.label }}
+			{{ form.email(size=80) }}<br><br>
+			{{ form.password.label }}
+			{{ form.password(size=36) }}<br>
+			{% for error in form.email.errors %}
+				<span style='color: red;'>[{{ error }}]</span><br>
+			{% endfor %}
+			{% for error in form.password.errors %}
+				<span style='color: red;'>[{{ error }}]</span><br>
+			{% endfor %}
+		</p>
+		<label class="checkbox">{{ form.remember_me }} Remember Me</label>
+		<p><button type='submit' class="btn">Sign In!</button><br><br><button name = 'register' value='/register' class='btn'>Register</button></p>
+	</form>
+{% endblock %}
