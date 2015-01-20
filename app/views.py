@@ -1,12 +1,13 @@
 import json
-from flask import make_response, render_template, flash, redirect, session, url_for, request, g
+import os
+from flask import send_from_directory, make_response, render_template, flash, redirect, session, url_for, request, g
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from app import app, db, lm
-from .forms import LoginForm, EditForm, RegisterForm
+from .forms import LoginForm, EditForm, RegisterForm, ChangePasswordForm, UploadForm
 from .models import User, Tweets, Emojis
 from datetime import datetime
-from config import POSTS_PER_PAGE 
-from werkzeug import generate_password_hash, check_password_hash
+from config import POSTS_PER_PAGE, UPLOADS_FOLDER, ALLOWED_EXTENSIONS
+from werkzeug import secure_filename, generate_password_hash, check_password_hash
 
 @app.before_request
 def before_request():
@@ -192,6 +193,51 @@ def register():
 							title='Register',
 							form = form)
 
+@app.route('/password', methods=['GET', 'POST'])
+def password():
+	if g.user is None:
+		return redirect(url_for('index'))
+	form = ChangePasswordForm()
+	if form.validate_on_submit():
+		if form.validate():
+			password = generate_password_hash(form.new_password.data)
+			u = User.query.filter_by(email=form.email.data).first()
+			u.password = password
+			db.session.commit()
+
+			flash('Your password has been changed to *******!')
+			flash('Just kidding, we wouldnt be silly enough to show you your password')
+			return redirect(request.args.get('next') or url_for('index'))
+	return render_template('change_password.html',
+							title='Change Password',
+							form = form)
+
+@app.route('/upload', methods=['GET', 'POST'])
+@login_required
+def upload():
+	form = UploadForm()
+	if form.validate_on_submit():
+		file = form.filename.data
+		if file:
+			filename = secure_filename(file.filename)
+			location = os.path.join(UPLOADS_FOLDER, filename)
+			u = User.query.filter_by(id = g.user.id).first()
+			if u.location is not None:
+				os.remove(os.path.join(UPLOADS_FOLDER, u.location))
+			u.location = filename
+			db.session.commit()
+			file.save(location)
+			return redirect(url_for('index', filename=filename))
+	return render_template('upload.html',
+							filename=None,
+							form = form)
+
+@app.route('/uploaded/<filename>')
+@login_required
+def uploaded(filename):
+	return send_from_directory(UPLOADS_FOLDER, filename)
+
+
 @app.errorhandler(404)
 def not_found_error(error):
 	return render_template('404.html'), 404
@@ -200,3 +246,9 @@ def not_found_error(error):
 def internal_error(error):
 	db.session.rollback()
 	return render_template('500.html'), 500
+
+# basic functions
+
+def allowed_file(filename):
+	filetype= filename.split('.')[1]
+	return filetype in ALLOWED_EXTENSIONS

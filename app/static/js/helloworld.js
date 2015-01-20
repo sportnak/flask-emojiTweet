@@ -95,7 +95,7 @@ var PostBox = React.createClass({
 	    var s = document.body.scrollTop;
 	    var diff = lastScrollTop - s;
 	    var totalMove = min - lastScrollTop;
-	    var scrolled = (h + s) > document.body.offsetHeight - 200;
+	    var scrolled = (h + s) > document.body.offsetHeight - 100;
 
 	    if(diff < 0 ){
 	    	min = s;

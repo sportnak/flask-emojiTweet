@@ -1,0 +1,14 @@
+<!-- extends base.html -->
+{%extends "base.html" %}
+
+{% block content %}
+	 <form action="" method="post" name="simple" enctype="multipart/form-data">
+	 	{{form.hidden_tag()}}
+	    <p>
+	       <h1>Upload a file</h1><br>
+	       <p style='width:500px'>Note that by default we use the gravatar associated with your email. Simply go to their website and set your image in order to streamline this process for yourself with other accounts as well.</p>
+	       {{form.filename()}}
+	     </p>
+	    <p><input type="submit" value="Submit"></p>
+	 </form>
+{% endblock %}

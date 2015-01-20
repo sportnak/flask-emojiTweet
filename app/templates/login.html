@@ -7,9 +7,9 @@
 		<p>
 			<p style='display:inline; font-weight:bold'>Please enter your login information:</p><br><br>
 			{{ form.email.label }}
-			{{ form.email(size=80) }}<br><br>
+			{{ form.email(size=120) }}<br><br>
 			{{ form.password.label }}
-			{{ form.password(size=36) }}<br>
+			{{ form.password(size=54) }}<br>
 			{% for error in form.email.errors %}
 				<span style='color: red;'>[{{ error }}]</span><br>
 			{% endfor %}

@@ -7,6 +7,10 @@ if os.environ.get('DATABASE_URL') is None:
 else:
     SQLALCHEMY_DATABASE_URI = os.environ['DATABASE_URL']
 
+UPLOADS_FOLDER = os.path.realpath('.') + '\\uploads'
+ALLOWED_EXTENSIONS = set(['xt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
+FILE_SYSTEM_STORAGE_VIEW = 'uploads'
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
 
 WTF_CSRF_ENABLED = True
