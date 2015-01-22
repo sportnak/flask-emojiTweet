@@ -6,8 +6,7 @@ var Emoji = React.createClass({
 	post: function(url){
 		$.ajax({
 			url: url,
-			dataType: 'json',
-			type: 'POST',
+			type:'POST',
 			success: function(data){
 				this.setState({data: data});
 			}.bind(this),
@@ -19,16 +18,12 @@ var Emoji = React.createClass({
 
 	render: function(){
 		var postString = "/post/" + this.props.emoji.id
-		emoji = {
-			handleClick: function(url){
-				return function() {
-					this.post(url)
-				}.bind(this)
-			}.bind(this)
-		}
+
 		return (
-			<li style={{width:'100px', height:'100px;', display:'inline-block'}} onClick={emoji.handleClick(postString)}>
-				<a href="/index"><img src={this.props.emoji.location}></img></a>
+			<li style={{width:'100px', height:'100px;', display:'inline-block'}} onClick={function() {
+					this.post(postString)
+				}.bind(this)}>
+				<a href={postString}><img src={this.props.emoji.location} style={{width:'100px', height:'100px;', display:'inline-block'}} ></img></a>
 			</li>
 		);
 	}
@@ -74,7 +69,7 @@ var EmojiList = React.createClass({
 		}
 
 		return (
-			<div className="pagination pagination-lg" >
+			<div>
 				<nav> 
 					<ul className="pagination pagination-lg">
 						<li>

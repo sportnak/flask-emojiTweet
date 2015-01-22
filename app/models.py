@@ -66,6 +66,12 @@ class User(db.Model):
 		if self.is_following(user):
 			self.followed.remove(user)
 			return self
+	def to_json(self):
+		return {
+				'id':self.id,
+				'nickname': self.nickname,
+				'location': self.location
+			}
 
 	def is_following(self, user):
 		return self.followed.filter(followers.c.followed_id == user.id).count() > 0
@@ -99,7 +105,6 @@ class Tweets(db.Model):
 				'emoji': self.emoji,
 				'timestamp': self.timestamp.strftime('%m/%d/%Y'),
 				'user_id': self.user_id,
-				'avatar': User.query.filter_by(id=self.user_id).first().avatar(128),
 				'location': self.location()
 			}
 		return {
@@ -107,7 +112,6 @@ class Tweets(db.Model):
 			'emoji': self.emoji,
 			'timestamp': self.timestamp.strftime('%m/%d/%Y'),
 			'user_id': self.user_id,
-			'avatar': 'http://www.gravatar.com/avatar/23d?d=mm&s=128',
 			'location': self.location()
 		}
 

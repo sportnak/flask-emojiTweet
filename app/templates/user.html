@@ -29,10 +29,8 @@
 	<br>
 	<h3>Your Tweets:</h3>
 	<hr>
-	{% for post in posts.items %}
-		{% include 'post.html' %}
-	<hr>
-	{% endfor %}
+	<div id='tweetBox' class="user-{{user.id}}")></div>
+	<script type="text/jsx" src="/static/js/helloworld.js"></script>
 	<div class="pagination">
 		<ul>
 			<li>{% if posts.has_prev %}<a href="{{ url_for('user', nickname=user.nickname, page=posts.prev_num) }}">Prev </a>{% else %} <a>Prev</a> {% endif %}</li>

@@ -42,8 +42,7 @@ def login():
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/post/<int:id>', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
-@app.route('/index/<int:page>', methods=['GET', 'POST'])
-def index(page=1, id = -1):
+def index(id = -1):
 	if id > 0:
 		if g.user is not None and g.user.is_authenticated():
 			tweets = Tweets(emoji=id, timestamp=datetime.utcnow(), user_id = g.user.id)
@@ -55,14 +54,14 @@ def index(page=1, id = -1):
 		return redirect(url_for('index'))
 	elif g.user is not None and g.user.is_authenticated():
 		user = g.user
-		tweets = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
+		tweets = g.user.followed_posts().all()
 
 		return render_template('index.html',
 								title='Home',
 								user=user,
 								tweets=tweets)
 	else:
-		tweets = Tweets.query.paginate(page, POSTS_PER_PAGE, False)
+		tweets = Tweets.query.all()
 		return render_template('index.html',
 							title='Home',
 							user= None,
@@ -79,6 +78,12 @@ def tweets(user=0):
 	tweets = []
 	if posts is not None:
 		tweets = [post.to_json() for post in posts]
+		for tweet in tweets:
+			u = User.query.filter_by(id=tweet['user_id']).first()
+			if u is not None:
+				tweet['user'] = u.to_json()
+			elif tweet['user_id'] == 0:
+				tweet['avatar'] = 'http://www.gravatar.com/avatar/31d?d=mm&s=50'
 		response = make_response()
 		response.data = json.dumps(tweets)
 	return response
@@ -93,7 +98,6 @@ def emojis():
 		response = make_response()
 		response.data = json.dumps(emojis)
 	return response
-# EUREKA - [array] = [before tweets] + [shown tweets] + [after tweets]
 
 @lm.user_loader
 def load_user(id):
@@ -233,7 +237,6 @@ def upload():
 							form = form)
 
 @app.route('/uploaded/<filename>')
-@login_required
 def uploaded(filename):
 	return send_from_directory(UPLOADS_FOLDER, filename)
 

@@ -6,11 +6,22 @@ var min = 0;
 
 var Post = React.createClass({
 	render: function() {
+		var imageString = ""
+		if (this.props.post.user){
+			if (this.props.userId){
+				imageString = "../uploaded/" + this.props.post.user.location
+			} else {
+				imageString = "uploaded/" + this.props.post.user.location
+			}
+		} else {
+			imageString = this.props.post.avatar
+		}
+		
 		return (
 			<div class="container">	
 				<div class="row">
 					<div class="span8 offset2" style={{textAlign:'center'}}>
-						<h2><img src={ this.props.post.avatar }></img><i> {this.props.post.nickname } is feeling: </i><img src={ this.props.post.location } height="100" width="100"></img></h2><p>on { this.props.post.timestamp }</p>
+						<h2><img src={imageString} style={{height:'128px'}}></img><i> {this.props.post.nickname } is feeling: </i><img src={ this.props.post.location } height="100" width="100"></img></h2><p>on { this.props.post.timestamp }</p>
 					</div>
 				</div>
 			</div>
@@ -20,9 +31,10 @@ var Post = React.createClass({
 
 var PostsList = React.createClass({
 	render: function() {
+		var id = this.props.userId
 		var postNodes = this.props.data.map(function(post){
 			return (
-				<Post post={post} />
+				<Post post={post} userId={id} />
 			);
 		});
 		return (
@@ -61,8 +73,9 @@ var PostBox = React.createClass({
 	},
 
 	loadPostsFromServer: function(self) {
+		url = '/tweets/' + this.props.user
 		$.ajax({
-			url: '/tweets',
+			url: url,
 			dataType: 'json',
 			success: function(data){ 
 				this.addTweet(data)
@@ -83,9 +96,9 @@ var PostBox = React.createClass({
 				count = count + 1;
 				updated.push(tweet);
 			});
-			console.log(updated);
 			this.setState({tweets: updated, count: count, skip: skip});
 		}
+		console.log(updated)
 	},
 
 	checkWindowScroll: function(){
@@ -198,7 +211,7 @@ var PostBox = React.createClass({
 		return (
 			<div>
 				<h1>Tweets</h1>
-				<PostsList data={this.state.tweets}/>
+				<PostsList data={this.state.tweets} userId={this.props.user}/>
 			</div>
 		);
 	},
@@ -211,10 +224,12 @@ var PostBox = React.createClass({
 		this.setState({currentPage: pageNum})
 	}
 });
+
+var user = document.getElementById('tweetBox').getAttribute("class").split("-")[1]
 var init = [{"timestamp": "01/16/2015", "emoji": 4, "user_id": 2, "id": 28, "avatar": "http://www.gravatar.com/avatar/4b60a255f2ae71539a0111cb1ec5223a?d=mm&s=128", "location": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcTgi5nDvtBwVJUZp4LoYou8lNUPF8CT1kO4XAstnCRYYHewRCwA"}]
 React.renderComponent(
-	<PostBox pollInterval={10000} tweets={init} />,
-	document.getElementById('example')
+	<PostBox pollInterval={10000} tweets={init} user={user}/>,
+	document.getElementById('tweetBox')
 );
 
 
