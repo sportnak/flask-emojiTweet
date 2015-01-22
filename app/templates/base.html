@@ -18,8 +18,8 @@
 		<body>
 			<div class="navbar navbar-inverse">
 				<div class="navbar-inner">
-					<a class="brand" href="/index">EmojiTweet</a>
-					<ul class="nav">
+					<a class="navbar-brand" href="/index">EmojiTweet</a>
+					<ul class="nav navbar-nav">
 						<li><a href="/index">Home</a></li>
 						{% if g.user.is_authenticated() %}
 						<li><a href="{{ url_for('user', nickname=g.user.nickname) }}">Your Profile</a></li>
