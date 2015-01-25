@@ -1,0 +1,4 @@
+#!C:\Users\Michael\Documents\Development\flask-microblog\flask\Scripts\python.exe
+from migrate.versioning.shell import main
+
+main()
